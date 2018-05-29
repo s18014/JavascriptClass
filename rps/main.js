@@ -6,14 +6,12 @@ const playerHands = [
     document.getElementById("p0"),
     document.getElementById("p1"),
     document.getElementById("p2"),
-    document.getElementById("p3")
 ];
 
 const computerHands = [
     document.getElementById("c0"),
     document.getElementById("c1"),
     document.getElementById("c2"),
-    document.getElementById("c3")
 ];
 
 const message = document.getElementById("message");
@@ -47,24 +45,7 @@ function handSelect(event) {
         message.innerText = "あいこ"
     } else if (judge === 1) {
         message.innerText = "まけ"
-        setTimeout("funing(0)", 1000)
     } else {
         message.innerText = "かち"
-        setTimeout("funing(1)", 1000)
-    }
-}
-
-function funing(lose) {
-
-    if (lose === 0) {
-        for (let hand of playerHands) {
-            hand.classList.remove("on");
-        }
-        playerHands[3].classList.add("on")
-    } else {
-        for (let hand of computerHands) {
-            hand.classList.remove("on");
-        }
-        computerHands[3].classList.add("on")
     }
 }
