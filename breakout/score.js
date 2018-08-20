@@ -6,7 +6,7 @@ class Score {
     }
 
     zeropadding() {
-        return ('00000' + this.score).slice(-5)
+        return ('000000' + this.score).slice(-6)
     }
 
     draw(ctx) {
@@ -15,6 +15,7 @@ class Score {
 
         ctx.font = "24px serif";
         ctx.fillStyle = '#fff';
+        ctx.textAlign = 'right';
         ctx.fillText('score: ' + score, this.x, this.y);
 
         ctx.restore();

@@ -3,21 +3,25 @@ const ctx = canvas.getContext("2d");
 const WINDOW_WIDTH = canvas.width;
 const WINDOW_HEIGHT = canvas.height;
 const SPF = 1000 / 60;
-const PADDLE_SPEED = 10;
-const BLOCK_WIDTH = 50;
-const BLOCK_HEIGHT = 20;
+const PADDLE_SPEED = 15;
+const BLOCK_WIDTH = WINDOW_WIDTH / 15;
+const BLOCK_HEIGHT = WINDOW_HEIGHT / 25;
 const MASS_X = Math.floor(WINDOW_WIDTH / BLOCK_WIDTH);
 const MASS_y = Math.floor(WINDOW_HEIGHT / BLOCK_HEIGHT);
 
 const input = new Input();
-const ball = new Ball(400, 300, 10, 'red');
-const paddle = new Paddle(400, 550, 80, 10, 'deepskyblue');
-const score = new Score(WINDOW_WIDTH - 150, 24);
+const ball = new Ball(400, 300, 10, 7, 'red');
+const paddle = new Paddle(400, 550, 200, 10, 'deepskyblue');
+const score = new Score(WINDOW_WIDTH - 12, 24);
 const blocks = [];
 
-for (x=3; x<MASS_X-3; x++) {
-    for (y=5; y<MASS_y-12; y++) {
-        blocks.push(new Block(x*BLOCK_WIDTH, y*BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT, "green"))
+for (x=2; x<MASS_X-2; x++) {
+    for (y=4; y<MASS_y-10; y++) {
+        var color = '#090';
+        if ((y + x) % 2 == 1) {
+            color = '#009';
+        }
+        blocks.push(new Block(x*BLOCK_WIDTH + BLOCK_WIDTH / 2, y*BLOCK_HEIGHT + BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT, color))
     }
 }
 
@@ -26,11 +30,11 @@ window.setInterval(game_tick, SPF);
 function game_tick() {
     // 入力状況に応じた呼び出し
     if (input.space && !ball.isStart) {
-        ball.start(5);
+        ball.start();
     }
     if (!ball.isStart) {
         ball.x = paddle.x;
-        ball.y = paddle.y - ball.radius - paddle.half_height;
+        ball.y = paddle.y - ball.radius - paddle.half_height * 2;
     }
     if (input.left) {
         paddle.move(-PADDLE_SPEED);
@@ -44,7 +48,15 @@ function game_tick() {
     ball.move();
 
     // ボールとブロックの当たり判定
-    paddle.collide(ball);
+    if (paddle.collide(ball)) {
+        if (!(input.left || input.right) || (input.left && input.right)) {
+            ball.changeAngle(0)
+        } else if (input.left) {
+            ball.changeAngle(-1)
+        } else if (input.right) {
+            ball.changeAngle(1)
+        }
+    };
     // ボールとブロックの当たり判定
     blocks_collide();
 
@@ -75,6 +87,7 @@ function game_over() {
         ctx.fillStyle = '#fff';
         ctx.fillText('game over', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
         ctx.restore();
+
         ball.vx = 0;
         ball.vy = 0;
     }

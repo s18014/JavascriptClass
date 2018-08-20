@@ -29,7 +29,6 @@ class Block {
         ctx.strokeStyle = '#000';
         ctx.fill();
         ctx.stroke();
-        console.log(1);
 
         ctx.restore();
     }

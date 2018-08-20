@@ -45,25 +45,17 @@ class Paddle {
     collide(ball) {
         const top = this.y - this.half_height;
         const bottom = this.y + this.half_height;
-        // ボールがブロックより上か下にある場合、何もしない
-        if (top > ball.bottom || bottom < ball.top) {
-            return;
-        }
-
         const left = this.x - this.half_width;
         const right = this.x + this.half_width;
-
-        if (left < ball.right && right > ball.left) {
-            if (ball.rightBottom.x < left && ball.rightBottom.y > top) {
-                // ブロックの左角より下側であたったら上に戻さない
-                ball.reboundHorizontal(left - ball.right);
-            } else if (ball.leftBottom.x > right && ball.leftBottom.y > top) {
-                // ブロックの右角より下側であたったら上に戻さない
-                ball.reboundHorizontal(ball.left - right);
-            } else {
-                // 通常通り上に跳ね返す
-                ball.reboundVertical(ball.bottom - top);
-            }
+        var iscollide = false;
+        // ボールがブロックより上か下にある場合、何もしない
+        if (top < ball.bottom && bottom > ball.top && left < ball.right && right > ball.left) {
+            iscollide = true;
+        } else if (top < ball.leftTop && bottom > ball.leftBottom && left < ball.rightTop && right > ball.leftTop)
+            iscollide = true;
+        if (iscollide) {
+            ball.y = top - ball.radius + 1;
         }
+        return iscollide
     }
 }

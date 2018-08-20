@@ -2,6 +2,9 @@ class Ball {
     static get ANGLE360() {
         return 6.283185307179586;
     }
+    static get RADIAN() {
+        return Math.PI / 180
+    }
 
         get top() {
             return this.y - this.radius;
@@ -47,12 +50,14 @@ class Ball {
         }
     }
 
-    constructor(x, y, radius, color) {
+    constructor(x, y, radius, speed, color) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.vx = 0;
-        this.vy = 0;
+        this.speed = speed;
+        this.angle = 60;
+        this.vx = speed * Math.cos(this.angle * Ball.RADIAN);
+        this.vy = -speed * Math.sin(this.angle * Ball.RADIAN);
         this.color = color;
         this.isStart = false;
         this.collisionPoint = [
@@ -70,6 +75,16 @@ class Ball {
         ctx.arc(this.x, this.y, this.radius, 0, Ball.ANGLE360);
 
         ctx.fillStyle = this.color;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(this.x + 1 * Math.sign(this.vx), this.y + 1 * Math.sign(this.vy), 5, 0,Ball.ANGLE360);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(this.x + 3 * Math.sign(this.vx), this.y + 3 * Math.sign(this.vy), 3, 0,Ball.ANGLE360);
+        ctx.fillStyle = '#000';
         ctx.fill();
 
         ctx.restore();
@@ -109,21 +124,37 @@ class Ball {
         }
     }
 
-    start(speed) {
+    start() {
         this.isStart = true;
         if (this.vx !== 0 || this.vy !== 0) {
             return;
         }
 
-        this.vx = speed / 1.4142;
-        this.vy = -speed / 1.4142;
-    }
-
-    reboundVertical() {
-        this.vy = -this.vy;
+        this.changeAngle(0);
     }
 
     reboundHorizontal() {
-        this.vx = -this.vx;
+        this.vx = -this.vx
     }
+
+    reboundVertical() {
+        this.vy = -this.vy
+    }
+
+    changeAngle(vector) {
+        if (! vector == 0) {
+            this.angle -= Math.sign(this.vx) * vector * 15;
+        }
+        if (this.angle < 15) {
+            this.angle = 15;
+        }
+        if (this.angle > 75) {
+            this.angle = 75;
+        }
+        this.vx = this.speed * Math.cos(this.angle * Ball.RADIAN) * Math.sign(this.vx);
+        this.vy = -this.speed * Math.sin(this.angle * Ball.RADIAN);
+        console.log(this.angle);
+    }
+
+
 }
