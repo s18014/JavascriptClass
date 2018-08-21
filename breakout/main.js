@@ -10,16 +10,16 @@ const MASS_X = Math.floor(WINDOW_WIDTH / BLOCK_WIDTH);
 const MASS_y = Math.floor(WINDOW_HEIGHT / BLOCK_HEIGHT);
 
 const input = new Input();
-const ball = new Ball(400, 300, 10, 7, 'red');
+const ball = new Ball(400, 300, 10, 5, 'red');
 const paddle = new Paddle(400, 550, 200, 10, 'deepskyblue');
 const score = new Score(WINDOW_WIDTH - 12, 24);
 const blocks = [];
 
 for (x=2; x<MASS_X-2; x++) {
     for (y=4; y<MASS_y-10; y++) {
-        var color = '#090';
+        var color = '#00f';
         if ((y + x) % 2 == 1) {
-            color = '#009';
+            color = '#0f0';
         }
         blocks.push(new Block(x*BLOCK_WIDTH + BLOCK_WIDTH / 2, y*BLOCK_HEIGHT + BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT, color))
     }
@@ -34,7 +34,7 @@ function game_tick() {
     }
     if (!ball.isStart) {
         ball.x = paddle.x;
-        ball.y = paddle.y - ball.radius - paddle.half_height * 2;
+        ball.y = paddle.y - ball.radius - paddle.half_height;
     }
     if (input.left) {
         paddle.move(-PADDLE_SPEED);
@@ -45,6 +45,7 @@ function game_tick() {
 
 
     // ボールの移動
+    blocks_collide();
     ball.move();
 
     // ボールとブロックの当たり判定
@@ -58,7 +59,6 @@ function game_tick() {
         }
     };
     // ボールとブロックの当たり判定
-    blocks_collide();
 
     // 各種オブジェクトの描画
     ctx.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -82,10 +82,12 @@ function blocks_collide() {
 function game_over() {
     if (ball.y > WINDOW_HEIGHT) {
         ctx.save();
-        ctx.font = "42px serif";
+        ctx.font = "64px serif";
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#fff';
-        ctx.fillText('game over', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+        ctx.fillStyle = '#f00';
+        ctx.strokeStyle = '#000';
+        ctx.fillText('GAME OVER', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+        ctx.strokeText('GAME OVER', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
         ctx.restore();
 
         ball.vx = 0;
@@ -104,10 +106,12 @@ function game_clear() {
         return
     }
     ctx.save();
-    ctx.font = "42px serif";
+    ctx.font = "64px serif";
     ctx.textAlign = 'center';
     ctx.fillStyle = '#fff';
-    ctx.fillText('game clear', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+    ctx.strokeStyle = '#000';
+    ctx.fillText('GAME CLEAR', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+    ctx.strokeText('GAME CLEAR', WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
     ctx.restore();
     ball.vx = 0;
     ball.vy = 0;

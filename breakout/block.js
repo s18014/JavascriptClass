@@ -6,7 +6,7 @@ class Block {
         this.half_height = height / 2;
         this.color = color;
         this.exist = true;
-        this.point = 100
+        this.point = 100;
     }
 
     draw(ctx) {
@@ -37,50 +37,32 @@ class Block {
         if (!this.exist) {
             return false;
         }
-        let result = true;
+        let iscollide = false;
         const top = this.y - this.half_height;
         const bottom = this.y + this.half_height;
-        // ボールがブロックより上か下にある場合、何もしない
-        if (top > ball.bottom || bottom < ball.top) {
-            return false;
-        }
-
         const left = this.x - this.half_width;
         const right = this.x + this.half_width;
 
-        if (left < ball.right && right > ball.left) {
-            if (ball.rightBottom.x < left && ball.rightBottom.y > top
-                && ball.rightBottom.y < bottom) {
-                // ブロックの左上角より下側であたったら上に戻さない
-                this.point *= 2;
-                ball.reboundHorizontal();
-            } else if (ball.leftBottom.x > right && ball.leftBottom.y > top
-                && ball.leftBottom.y < bottom) {
-                // ブロックの右上角より下側であたったら上に戻さない
-                this.point *= 2;
-                ball.reboundHorizontal();
-            } else if (ball.rightTop.x < left && ball.rightTop.y < bottom
-                && ball.rightTop.y > top) {
-                // ブロックの左下角より上側であたったら下に戻さない
-                this.point *= 2;
-                ball.reboundHorizontal();
-            } else if (ball.leftTop.x > right && ball.leftTop.y < bottom
-                && ball.leftTop.y > top) {
-                // ブロックの右下角より上側であたったら下に戻さない
-                this.point *= 2;
-                ball.reboundHorizontal();
-            } else if (ball.bottom > top && ball.top < top) {
-                // ブロックの上にあたった
-                this.point *= 3;
-                ball.reboundVertical();
-            } else {
-                // ブロックの下に当たった
-                ball.reboundVertical();
-            }
-        } else {
-            result = false;
+        // check ball collide a block
+        if (top < ball.bottom && bottom > ball.top && left < ball.right && right > ball.left) {
+            iscollide = true;
+        } else if (top < ball.leftTop && bottom > ball.leftBottom && left < ball.rightTop && right > ball.leftTop) {
+            iscollide = true;
         }
 
-        return result;
+        // direction of block collided
+        if (iscollide) {
+            if (top < ball.y+1 && bottom > ball.y-1) {
+                ball.reboundHorizontal();
+                this.point = 200
+            } else if (top > ball.y) {
+                this.point = 300;
+                ball.reboundVertical();
+            } else {
+                ball.reboundVertical();
+            }
+        }
+
+        return iscollide;
     }
 }

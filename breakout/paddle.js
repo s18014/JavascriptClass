@@ -48,13 +48,12 @@ class Paddle {
         const left = this.x - this.half_width;
         const right = this.x + this.half_width;
         var iscollide = false;
-        // ボールがブロックより上か下にある場合、何もしない
         if (top < ball.bottom && bottom > ball.top && left < ball.right && right > ball.left) {
             iscollide = true;
         } else if (top < ball.leftTop && bottom > ball.leftBottom && left < ball.rightTop && right > ball.leftTop)
             iscollide = true;
         if (iscollide) {
-            ball.y = top - ball.radius + 1;
+            ball.y = top - ball.radius - 1;
         }
         return iscollide
     }

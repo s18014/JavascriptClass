@@ -77,13 +77,19 @@ class Ball {
         ctx.fillStyle = this.color;
         ctx.fill();
 
+        ctx.restore();
+        ctx.save();
+
         ctx.beginPath();
-        ctx.arc(this.x + 1 * Math.sign(this.vx), this.y + 1 * Math.sign(this.vy), 5, 0,Ball.ANGLE360);
+        ctx.arc(this.x + this.vx / this.speed * 2, this.y + this.vy / this.speed * 2, 5, 0,Ball.ANGLE360);
         ctx.fillStyle = '#fff';
         ctx.fill();
 
+        ctx.restore();
+        ctx.save();
+
         ctx.beginPath();
-        ctx.arc(this.x + 3 * Math.sign(this.vx), this.y + 3 * Math.sign(this.vy), 3, 0,Ball.ANGLE360);
+        ctx.arc(this.x + this.vx / this.speed * 3, this.y + this.vy / this.speed * 3, 3, 0,Ball.ANGLE360);
         ctx.fillStyle = '#000';
         ctx.fill();
 
@@ -134,11 +140,13 @@ class Ball {
     }
 
     reboundHorizontal() {
-        this.vx = -this.vx
+        this.x -= this.vx;
+        this.vx = -this.vx;
     }
 
     reboundVertical() {
-        this.vy = -this.vy
+        this.y -= this.vy;
+        this.vy = -this.vy;
     }
 
     changeAngle(vector) {
@@ -155,6 +163,4 @@ class Ball {
         this.vy = -this.speed * Math.sin(this.angle * Ball.RADIAN);
         console.log(this.angle);
     }
-
-
 }
