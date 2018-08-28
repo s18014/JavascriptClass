@@ -131,11 +131,10 @@ class Ball {
     }
 
     start() {
-        this.isStart = true;
-        if (this.vx !== 0 || this.vy !== 0) {
+        if (this.isStart) {
             return;
         }
-
+        this.isStart = true;
         this.changeAngle(0);
     }
 

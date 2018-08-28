@@ -4,10 +4,12 @@ const WINDOW_WIDTH = canvas.width;
 const WINDOW_HEIGHT = canvas.height;
 const SPF = 1000 / 60;
 const PADDLE_SPEED = 15;
-const BLOCK_WIDTH = WINDOW_WIDTH / 15;
-const BLOCK_HEIGHT = WINDOW_HEIGHT / 25;
-const MASS_X = Math.floor(WINDOW_WIDTH / BLOCK_WIDTH);
-const MASS_y = Math.floor(WINDOW_HEIGHT / BLOCK_HEIGHT);
+const MASS_X = 15;
+const MASS_Y = 25;
+const MASS_WIDTH = WINDOW_WIDTH / MASS_X;
+const MASS_HEIGHT = WINDOW_HEIGHT / MASS_Y;
+const BLOCK_WIDTH = MASS_WIDTH;
+const BLOCK_HEIGHT = MASS_HEIGHT;
 
 const input = new Input();
 const ball = new Ball(400, 300, 10, 5, 'red');
@@ -16,12 +18,12 @@ const score = new Score(WINDOW_WIDTH - 12, 24);
 const blocks = [];
 
 for (x=2; x<MASS_X-2; x++) {
-    for (y=4; y<MASS_y-10; y++) {
+    for (y=4; y<MASS_Y-10; y++) {
         var color = '#00f';
         if ((y + x) % 2 == 1) {
             color = '#0f0';
         }
-        blocks.push(new Block(x*BLOCK_WIDTH + BLOCK_WIDTH / 2, y*BLOCK_HEIGHT + BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT, color))
+        blocks.push(new Block(x*MASS_WIDTH + BLOCK_WIDTH / 2, y*MASS_HEIGHT + BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT, color))
     }
 }
 
@@ -29,7 +31,7 @@ window.setInterval(game_tick, SPF);
 
 function game_tick() {
     // 入力状況に応じた呼び出し
-    if (input.space && !ball.isStart) {
+    if (input.space) {
         ball.start();
     }
     if (!ball.isStart) {
